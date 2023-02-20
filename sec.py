@@ -11,20 +11,18 @@ cnt = int(input("請輸入課程數:"))
 date_str = str(input("請輸入審查日期:"))
 
 # excel 1-2
-wb = openpyxl.load_workbook('1-2test.xlsx') #resource #需修改!!
+wb = openpyxl.load_workbook('1-2.xlsx') #resource #需修改!!
 sht = wb.worksheets[0]
 
 for v in range(cnt):
-    doc = docx.Document('1-10.docx') #需修改!!
-    # for sty in doc.styles:
-    #     sty.font.name = "標楷體"
-    #     sty.font.size = Pt(14)
-    # doc.styles['Normal'].font.name = "標楷體"
-    # doc.styles['Normal'].font.size = Pt(14)
+    doc = docx.Document('1-3.docx') #需修改!!
+    doc.styles['Normal'].font.name = "標楷體"
+    doc.styles['Normal'].font.size = Pt(14)
 
     #加課程編號
     crs_num = sht.cell(row=v+2,column=1).value
-    doc.paragraphs[3].add_run(crs_num)
+    r = doc.paragraphs[3].add_run(crs_num)
+    r.font.size=Pt(14)
 
     #更新審查日期
     doc.paragraphs[7].add_run(date_str)

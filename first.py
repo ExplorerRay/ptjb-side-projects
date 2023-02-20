@@ -1,7 +1,6 @@
 #要將此檔和1-1, 2-1放在同個資料夾 (這樣就不需要chdir)
 import openpyxl
 from openpyxl.styles import Alignment
-import pandas as pd
 import os
 
 num = int(input("請輸入審查委員數:"))
@@ -35,4 +34,4 @@ for i in range(1, sht_new.max_row+1):
         print(sht_new.cell(row = i, column = j).value)
         sht_new.cell(row = i, column = j).alignment = Alignment(wrapText=True)
 
-wb_new.save('1-2test.xlsx')
+wb_new.save('1-2.xlsx')

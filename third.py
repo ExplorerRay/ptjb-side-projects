@@ -1,5 +1,6 @@
 import openpyxl
 import docx
+from docx.shared import Pt
 import os
 
 os.chdir(r'C:\Users\Anita\Downloads')
@@ -16,12 +17,16 @@ sht = wb.worksheets[2] #根據聯盟決定index
 for v in range(cnt):
     nm = shtr.cell(row=v+2,column=3).value
     doc = docx.Document(str(nm)+'.docx')
+    doc.styles['Normal'].font.name = "標楷體"
+    doc.styles['Normal'].font.size = Pt(14)
 
     for i in range(4, sht.max_row+1):
         if str(sht.cell(row=i,column=2).value)==nm:
-            doc.paragraphs[4].add_run(str(sht.cell(row=i,column=3).value)+'/'+str(sht.cell(row=i,column=6).value)) #學校/系所
+            r=doc.paragraphs[4].add_run(str(sht.cell(row=i,column=3).value)+'/'+str(sht.cell(row=i,column=6).value)) #學校/系所
             doc.paragraphs[5].add_run(str(sht.cell(row=i,column=8).value)) #課程名稱
             doc.paragraphs[6].add_run(str(sht.cell(row=i,column=7).value)) #課程教師
+            r.font.name="標楷體"
+            r.font.size=Pt(14)
             break
 
     tb=doc.tables[0]
@@ -29,4 +34,4 @@ for v in range(cnt):
         tb.rows[i].cells[1].text = shtr.cell(row=v+2,column=i+3).value
 
 
-    doc.save(str(nm)+'.docx')
+    doc.save(str(nm)+'審查意見回覆.docx')
