@@ -1,21 +1,21 @@
-#產生審查意見表 (給課程老師)
+#產生審查意見表 (給課程老師) 有些地方因檔名、檔案位置等原因需修改
 import docx
 import openpyxl
 from docx.shared import Pt
 import os
 
-os.chdir(r"C:\Users\Anita\Downloads")
+os.chdir(r"C:\Users\Anita\Downloads") #需修改!!
 
 num = int(input("請輸入審查委員數:")) #要小於等於5
 cnt = int(input("請輸入課程數:"))
 date_str = str(input("請輸入審查日期:"))
 
 # excel 1-2
-wb = openpyxl.load_workbook('1-2test.xlsx') #resource
+wb = openpyxl.load_workbook('1-2test.xlsx') #resource #需修改!!
 sht = wb.worksheets[0]
 
 for v in range(cnt):
-    doc = docx.Document('1-10.docx')
+    doc = docx.Document('1-10.docx') #需修改!!
     # for sty in doc.styles:
     #     sty.font.name = "標楷體"
     #     sty.font.size = Pt(14)
