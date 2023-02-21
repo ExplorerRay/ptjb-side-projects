@@ -3,8 +3,6 @@ import docx
 from docx.shared import Pt
 import os
 
-os.chdir(r'C:\Users\Anita\Downloads')
-
 num = int(input("請輸入審查委員數:")) #要小於等於5
 cnt = int(input("請輸入課程數:"))
 

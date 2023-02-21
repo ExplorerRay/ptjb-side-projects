@@ -1,10 +1,13 @@
 #要將此檔和1-1, 2-1放在同個資料夾 (這樣就不需要chdir)
 import openpyxl
 from openpyxl.styles import Alignment
+import docx
+from docx.shared import Pt
 import os
 
 num = int(input("請輸入審查委員數:"))
 crs = int(input("請輸入課程數:"))
+date_str = str(input("請輸入審查日期:"))
 #print(os.getcwd())
 
 wb_new = openpyxl.Workbook()
@@ -36,5 +39,32 @@ try:
     wb_new.save('1-2.xlsx')
 except FileNotFoundError:
     print("\nError:\n1-1.xlsx NOT found.\n請將此程式和1-1.xlsx放在同個資料夾\n")
+    input("Press Any Key to close this window")
+
+# excel 1-2
+wbsec = openpyxl.load_workbook('1-2.xlsx') #resource #需修改!!
+shtsec = wbsec.worksheets[0]
+
+for v in range(crs):
+    doc = docx.Document('1-3.docx') #需修改!!
+    doc.styles['Normal'].font.name = "標楷體"
+    doc.styles['Normal'].font.size = Pt(14)
+
+    #加課程編號
+    crs_num = shtsec.cell(row=v+2,column=1).value
+    r = doc.paragraphs[3].add_run(crs_num)
+    r.font.size=Pt(14)
+
+    #更新審查日期
+    doc.paragraphs[7].add_run(date_str)
+
+    tb = doc.tables[0]
+    tb.style.font.name = "標楷體" #not sure useful or not
+    tb.style.font.size = Pt(14)
+    #print(tb.rows[0].cells[1].text)
+    for i in range(1, num+1):
+        tb.rows[i].cells[0].text = str("委員"+str(i)+"\n")+shtsec.cell(row=v+2,column=i+1).value
+    
+    doc.save(str(crs_num)+'.docx')
 
 input("Press Any Key to close this window")
