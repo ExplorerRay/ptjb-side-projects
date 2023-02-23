@@ -37,4 +37,4 @@ try:
 except FileNotFoundError:
     print("\nError:\n1-1.xlsx NOT found.\n請將此程式和1-1.xlsx放在同個資料夾\n")
 
-input("Press Any Key to close this window")
+#input("Press Any Key to close this window")

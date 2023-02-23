@@ -5,12 +5,13 @@ import os
 
 num = int(input("請輸入審查委員數:")) #要小於等於5
 cnt = int(input("請輸入課程數:"))
+lea = int(input("請選擇聯盟\n1.健康 2.環境 3.終端(若是健康聯盟請輸入1，以此類推):"))
 
 wbr = openpyxl.load_workbook('2-1.xlsx') #google form來的
 shtr = wbr.worksheets[0] 
 
 wb = openpyxl.load_workbook('3-1.xlsx') #課程大表要改名為3-1
-sht = wb.worksheets[2] #根據聯盟決定index
+sht = wb.worksheets[lea-1] #根據聯盟決定index
 
 for v in range(cnt):
     nm = shtr.cell(row=v+2,column=3).value
