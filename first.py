@@ -25,7 +25,10 @@ try:
     #combine審查意見及其他(尚未根據不同google form進行變化，亦無法確定委員和編號之對應[若委員2比委員1先填表單，順序會錯])
     for rw in range(1, crs+1):
         for cnt in range(4):
-            sht_new.cell(row = rw+1, column = 2+cnt).value = str('1.')+str(sht.cell(row = cnt+2, column = 4+3*(rw-1)).value) + str('\n') + str('2.') + str(sht.cell(row = cnt+2, column = 4+3*(rw-1)+1).value)
+            ans=str('1.')+str(sht.cell(row = cnt+2, column = 4+3*(rw-1)).value)
+            if sht.cell(row = cnt+2, column = 4+3*(rw-1)+1).value!='':
+                ans+=str('\n') + str('2.') + str(sht.cell(row = cnt+2, column = 4+3*(rw-1)+1).value)
+            sht_new.cell(row = rw+1, column = 2+cnt).value = ans
 
 
     for i in range(1, sht_new.max_row+1):
