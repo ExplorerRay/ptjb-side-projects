@@ -4,6 +4,11 @@ from docx.shared import Pt
 from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
+def setFNT(run):
+    run.font.name = "標楷體"
+    run.font.size = Pt(18)
+    run._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
+
 num = int(input("請輸入審查委員數:"))
 crs = int(input("請輸入課程數:"))
 
@@ -15,9 +20,12 @@ shtfull = full.worksheets[2] # 2代表終端聯盟
 gf = openpyxl.load_workbook('1-2.xlsx')
 shtgf = gf.worksheets[0]
 
+start = True
+
 for re in range(num): 
     for v in range(crs):
         # 從課程大表取資訊
+        pln_num = str(shtfull.cell(row=v+4,column=2).value)[0:4] # 取計畫編號
         crs_num = shtfull.cell(row=v+4,column=2).value # 取課程編號
         crs_nam = shtfull.cell(row=v+4,column=8).value # 取課程名稱
         key_mod = shtfull.cell(row=v+4,column=15).value # 取重點模組
@@ -25,16 +33,21 @@ for re in range(num):
         sch = shtfull.cell(row=v+4,column=3).value # 取學校
         dpt = shtfull.cell(row=v+4,column=6).value # 取系所
 
-        # 讀docx並寫入後另存新檔
-        doc = docx.Document('1-3.docx')
-        tb = doc.tables[0]
+        re_nam = shtgf.cell(row=re+2,column=3).value[0:3] # 審查委員名稱
 
-        # 增加審查委員
-        re_nam = shtgf.cell(row=re+2,column=3).value[0:3]
-        rn = doc.paragraphs[11].add_run(re_nam) 
-        rn.font.name = "標楷體"
-        rn.font.size = Pt(18)
-        rn._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
+        if str(shtfull.cell(row=v+3,column=2).value)[0:4] != str(pln_num):
+            chk_same = False # 確認此課程是否跟上個處理的課程同計畫
+        else: chk_same = True
+
+        # 重讀乾淨的docx 並寫入後 另存新檔
+        if chk_same==False or start==True:
+            doc = docx.Document('1-3.docx')
+            tbc = 0
+            start=False
+        else:
+            doc = docx.Document(str(pln_num)+str(re_nam)+'.docx')
+        tb = doc.tables[tbc]
+        tbc+=1
 
         # 綜合評分
         score = str(shtgf.cell(row=re+2,column=10+v*7).value)
@@ -43,6 +56,7 @@ for re in range(num):
         run.font_size = Pt(14)
         run._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
 
+        # 評分說明
         ans = ''
         if score=='4': ans+='■特優(4分)\n'
         else: ans+='□特優(4分)\n'
@@ -84,7 +98,7 @@ for re in range(num):
         opin_fir=''
         for o in opin_ls:
             opin_fir = opin_fir + o + '\n'
-        opin_sec = shtgf.cell(row=re+2,column=9+v*7).value #打字部分
+        opin_sec = str(shtgf.cell(row=re+2,column=9+v*7).value) #打字部分
         tb.rows[9].cells[0].text = opin_fir + '\n' + opin_sec
 
         tb.rows[0].cells[7].text = crs_num # 增加課程編號
@@ -93,16 +107,16 @@ for re in range(num):
         tb.rows[2].cells[3].text = crs_hos # 增加課程主持人
         tb.rows[2].cells[7].text = sch + '/' + dpt # 增加服務單位
 
-        # 以課程編號存檔
-        doc.save(str(crs_num)+str(re_nam)+'.docx')
-
-
-# for p in doc.paragraphs:
-#     print(p.text)
-#     print("=======\n")
-
-# doc = docx.Document('1-3.docx')
-# tb=doc.tables[0]
-# print(tb.rows[0].cells[7].text)
-# print("rows=" + str(len(tb.rows)))
-# print("columns=" + str(len(tb.columns)))
+        # 以計畫編號及委員姓名存檔
+        if chk_same == False:
+            # 增加首頁
+            rn = doc.paragraphs[11].add_run(re_nam) 
+            setFNT(rn)
+            rn = doc.paragraphs[14].add_run(str(pln_num)+'('+str(tbc)+'門課程)')
+            setFNT(rn)
+            rn = doc.paragraphs[15].add_run(sch)
+            setFNT(rn)
+            rn = doc.paragraphs[16].add_run(dpt)
+            setFNT(rn)
+            
+        doc.save(str(pln_num)+str(re_nam)+'.docx')
