@@ -28,9 +28,8 @@ shtfull = full.worksheets[lea-1]
 gf = openpyxl.load_workbook('1-2.xlsx')
 shtgf = gf.worksheets[0]
 
-start = True
-
 for re in range(num): 
+    start = True
     for v in range(crs):
         # 從課程大表取資訊
         pln_num = str(shtfull.cell(row=v+4,column=2).value)[0:4] # 取計畫編號
@@ -141,5 +140,5 @@ for re in range(num):
             # for d in range(tbc-1, 2, 1):
             #     delete_paragraph(doc.tables[d+1])
         
-        if not os.path.exists(str(re_nam)+'審查意見'): os.mkdir(str(re_nam)+'審查意見')
-        doc.save('./'+str(re_nam)+'審查意見/'+str(pln_num)+str(re_nam)+'.docx')
+        # if not os.path.exists(str(re_nam)+'審查意見'): os.mkdir(str(re_nam)+'審查意見')
+        doc.save(str(pln_num)+str(re_nam)+'.docx')
