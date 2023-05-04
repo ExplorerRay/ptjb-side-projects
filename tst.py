@@ -3,18 +3,26 @@ import openpyxl
 from docx.shared import Pt
 from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+import os
 
 def setFNT(run):
     run.font.name = "標楷體"
     run.font.size = Pt(18)
     run._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
+    run.bold = True
+
+def delete_paragraph(paragraph):
+    p = paragraph._element
+    p.getparent().remove(p)
+    p._p = p._element = None
 
 num = int(input("請輸入審查委員數:"))
 crs = int(input("請輸入課程數:"))
+lea = int(input("請選擇聯盟\n1.健康 2.環境 3.終端(若是健康聯盟請輸入1，以此類推):"))
 
 # excel 1-4 課程大表
 full = openpyxl.load_workbook('1-4.xlsx') # source 需修改檔名且放在同資料夾!!
-shtfull = full.worksheets[2] # 2代表終端聯盟
+shtfull = full.worksheets[lea-1]
 
 # excel 1-2 from google form審查意見
 gf = openpyxl.load_workbook('1-2.xlsx')
@@ -108,15 +116,30 @@ for re in range(num):
         tb.rows[2].cells[7].text = sch + '/' + dpt # 增加服務單位
 
         # 以計畫編號及委員姓名存檔
-        if chk_same == False:
+        if str(shtfull.cell(row=v+5,column=2).value)[0:4] != str(pln_num):
             # 增加首頁
-            rn = doc.paragraphs[11].add_run(re_nam) 
+            delete_paragraph(doc.paragraphs[11])
+            doc.paragraphs[11].insert_paragraph_before()
+            rn = doc.paragraphs[11].add_run('\t'*6+'審查委員： '+re_nam) 
             setFNT(rn)
-            rn = doc.paragraphs[14].add_run(str(pln_num)+'('+str(tbc)+'門課程)')
+            delete_paragraph(doc.paragraphs[14])
+            doc.paragraphs[14].insert_paragraph_before()
+            rn = doc.paragraphs[14].add_run('\t'*6+'計畫編號： '+str(pln_num)+'('+str(tbc)+'門課程)')
             setFNT(rn)
-            rn = doc.paragraphs[15].add_run(sch)
+            delete_paragraph(doc.paragraphs[15])
+            doc.paragraphs[15].insert_paragraph_before()
+            rn = doc.paragraphs[15].add_run('\t'*6+'申請學校： '+sch)
             setFNT(rn)
-            rn = doc.paragraphs[16].add_run(dpt)
+            delete_paragraph(doc.paragraphs[16])
+            doc.paragraphs[16].insert_paragraph_before()
+            rn = doc.paragraphs[16].add_run('\t'*6+'申請系所： '+dpt)
             setFNT(rn)
-            
-        doc.save(str(pln_num)+str(re_nam)+'.docx')
+
+            #for pa in range(11,17): doc.paragraphs[pa].alignment = 1
+
+            # 刪除多餘頁面
+            # for d in range(tbc-1, 2, 1):
+            #     delete_paragraph(doc.tables[d+1])
+        
+        if not os.path.exists(str(re_nam)+'審查意見'): os.mkdir(str(re_nam)+'審查意見')
+        doc.save('./'+str(re_nam)+'審查意見/'+str(pln_num)+str(re_nam)+'.docx')
