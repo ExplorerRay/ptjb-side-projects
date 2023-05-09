@@ -57,7 +57,9 @@ for re in range(num):
         tbc+=1
 
         # 綜合評分
-        score = str(shtgf.cell(row=re+2,column=10+v*7).value)
+        score = shtgf.cell(row=re+2,column=10+v*7).value
+        if score>4: score=4
+        score = str(score)
         run = tb.rows[11].cells[0].paragraphs[0].add_run(score)
         run.font.name = "標楷體"
         run.font_size = Pt(14)
@@ -99,7 +101,7 @@ for re in range(num):
                 tb.rows[4+k].cells[8].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 
         # 審查意見
-        opin_fir = shtgf.cell(row=re+2,column=8+v*7).value #選取部分
+        opin_fir = shtgf.cell(row=re+2,column=8+v*7).value #複選題選取部分
         if opin_fir[0]=='無': opin_fir=''
         opin_ls = opin_fir.split(', ')
         opin_fir=''
