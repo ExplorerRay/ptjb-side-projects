@@ -4,4 +4,5 @@ use python to get response from google form(excel), then do some things to these
 
 ## use openpyxl module
 try to get info from 1-2.xlsx and write to allScore.xlsx
+The output is result.xlsx
 
