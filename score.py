@@ -1,7 +1,7 @@
 import openpyxl
 
 # 分數及意見總表 (此次寫入目標)
-sc = openpyxl.load_workbook('allScore.xlsx')
+sc = openpyxl.load_workbook('1-1.xlsx')
 shtsc = sc.worksheets[2] # 2代表終端聯盟
 
 # excel 1-2 from google form審查意見
