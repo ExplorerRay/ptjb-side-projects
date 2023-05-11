@@ -41,8 +41,11 @@ shtrs = rs.worksheets[2] # 2代表終端聯盟
 for c in range(crs):
     sum=0.0
     for rv in range(num):
-        sum += float(shtrs.cell(row=c+4, column=11+rv).value)
-    shtrs.cell(row=c+4, column=15).value = sum/4
+        # 若沒有所有委員都填好，會出Bug
+        if(shtrs.cell(row=c+4, column=11+rv).value!=None):
+            sum += float(shtrs.cell(row=c+4, column=11+rv).value)
+        else: pass
+    shtrs.cell(row=c+4, column=15).value = sum/num
         
 rs.save('result.xlsx')
 
