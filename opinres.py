@@ -4,6 +4,10 @@ from docx.shared import Pt
 from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
+def setFNT(run):
+    run.font.name = "標楷體"
+    run.font.size = Pt(14)
+    run._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
 
 num = int(input("請輸入審查委員數:"))
 crs = int(input("請輸入課程數:"))
@@ -44,7 +48,7 @@ for v in range(crs):
         tbc = 0
         start=False
     else:
-        doc = docx.Document(str(pln_num)+'.docx')
+        doc = docx.Document(str(pln_num)+'案-'+sch+'('+dpt+')_期末審查意見回覆.docx')
     tb = doc.tables[tbc]
     tbc+=1
 
@@ -54,8 +58,8 @@ for v in range(crs):
         idx = comite.index(str(re_nam))+1 # 判斷為委員幾(ex:委員1、委員4)
 
         # 設定寫入之字型及大小
-        doc.styles['Normal'].font.name = "標楷體"
-        doc.styles['Normal'].font.size = Pt(14)
+        doc.styles['Normal'].font.name = "Times new roman"
+        doc.styles['Normal'].font.size = Pt(12)
         doc.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
         
         # 審查意見
@@ -66,16 +70,18 @@ for v in range(crs):
         for o in opin_ls:
             opin_fir = opin_fir + o + '\n'
         opin_sec = str(shtgf.cell(row=re+2,column=9+v*7).value) #打字部分
-        tb.rows[idx-1].cells[0].text = '委員'+str(idx-1)+ '\n' +opin_fir + '\n' + opin_sec
+        tb.rows[idx].cells[0].text = '委員'+str(idx)+ '\n' +opin_fir + '\n' + opin_sec
 
     lines = 7 # 根據1-3.docx的空行數等等 進行修改
     # 填寫1-3上面資訊
     rn = doc.paragraphs[0+(tbc-1)*lines].add_run(str(crs_num)) #課程編號
-
+    setFNT(rn)
     rn = doc.paragraphs[1+(tbc-1)*lines].add_run(sch+'/'+dpt) #學校/系所
-
-    doc.paragraphs[2+(tbc-1)*lines].add_run(crs_nam) #課程名稱
-    doc.paragraphs[3+(tbc-1)*lines].add_run(crs_hos) #課程教師
+    setFNT(rn)
+    rn = doc.paragraphs[2+(tbc-1)*lines].add_run(crs_nam) #課程名稱
+    setFNT(rn)
+    rn = doc.paragraphs[3+(tbc-1)*lines].add_run(crs_hos) #課程教師
+    setFNT(rn)
 
     # 以計畫編號存檔
-    doc.save(str(pln_num)+'.docx')
+    doc.save(str(pln_num)+'案-'+sch+'('+dpt+')_期末審查意見回覆.docx')
