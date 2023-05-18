@@ -16,9 +16,6 @@ comite = ['洪士灝', '馬席彬', '黃世旭', '吳文慶']
 full = openpyxl.load_workbook('1-4.xlsx') # source 需修改檔名且放在同資料夾!!
 shtfull = full.worksheets[lea-1]
 
-# 課程老師已填好回覆的1-3 docx檔 input
-doc = docx.Document('1-3.docx')
-
 # 目標要填入的excel 1-1 分數及意見總表 output
 sc = openpyxl.load_workbook('1-1.xlsx') # source 需修改檔名且放在同資料夾!!
 shtsc = sc.worksheets[lea-1]
@@ -34,6 +31,7 @@ for v in range(crs):
     dpt = shtfull.cell(row=v+4,column=6).value # 取系所
 
     if shtfull.cell(row=v+4,column=1).value!=None: tbc=0
+    # 課程老師已填好回覆的docx檔 input
     doc = docx.Document(str(pln_num)+'案-'+sch+'('+dpt+')_期末審查意見回覆.docx')
     tb = doc.tables[tbc]
     tbc+=1
@@ -48,6 +46,5 @@ for v in range(crs):
         resp = tb.rows[re+1].cells[1].text
 
         shtsc.cell(row=v+4, column=20+re).value = resp
-        
         
 sc.save('final.xlsx')
