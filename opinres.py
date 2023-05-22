@@ -25,7 +25,7 @@ gf = openpyxl.load_workbook('1-2.xlsx')
 shtgf = gf.worksheets[0]
 
 # 目標要填寫的docx檔
-doc = docx.Document('1-3.docx')
+doc = docx.Document('1-5.docx')
 
 start=True
 for v in range(crs):
@@ -44,7 +44,7 @@ for v in range(crs):
 
     # 重讀乾淨的docx 並寫入後 另存新檔
     if chk_same==False or start==True:
-        doc = docx.Document('1-3.docx')
+        doc = docx.Document('1-5.docx')
         tbc = 0
         start=False
     else:
@@ -72,8 +72,8 @@ for v in range(crs):
         opin_sec = str(shtgf.cell(row=re+2,column=9+v*7).value) #打字部分
         tb.rows[idx].cells[0].text = '委員'+str(idx)+ '\n' +opin_fir + '\n' + opin_sec
 
-    lines = 7 # 根據1-3.docx的空行數等等 進行修改
-    # 填寫1-3上面資訊
+    lines = 7 # 根據1-5.docx的空行數等等 進行修改
+    # 填寫1-5上面資訊
     rn = doc.paragraphs[0+(tbc-1)*lines].add_run(str(crs_num)) #課程編號
     setFNT(rn)
     rn = doc.paragraphs[1+(tbc-1)*lines].add_run(sch+'/'+dpt) #學校/系所
