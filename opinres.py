@@ -3,6 +3,7 @@ import openpyxl
 from docx.shared import Pt
 from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+import re
 
 def setFNT(run):
     run.font.name = "標楷體"
@@ -52,10 +53,10 @@ for v in range(crs):
     tb = doc.tables[tbc]
     tbc+=1
 
-    for re in range(num):
+    for rev in range(num):
 
-        re_nam = shtgf.cell(row=re+2,column=3).value[0:3] # 審查委員名稱
-        idx = comite.index(str(re_nam))+1 # 判斷為委員幾(ex:委員1、委員4)
+        rev_nam = shtgf.cell(row=rev+2,column=3).value[0:3] # 審查委員名稱
+        idx = comite.index(str(rev_nam))+1 # 判斷為委員幾(ex:委員1、委員4)
 
         # 設定寫入之字型及大小
         doc.styles['Normal'].font.name = "Times new roman"
@@ -63,14 +64,23 @@ for v in range(crs):
         doc.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
         
         # 審查意見
-        opin_fir = shtgf.cell(row=re+2,column=8+v*7).value #複選題選取部分
+        point = 1
+        opin_fir = shtgf.cell(row=rev+2,column=8+v*7).value #複選題選取部分
         if opin_fir[0]=='無': opin_fir=''
         opin_ls = opin_fir.split(', ')
         opin_fir=''
         for o in opin_ls:
-            opin_fir = opin_fir + o + '\n'
-        opin_sec = str(shtgf.cell(row=re+2,column=9+v*7).value) #打字部分
-        tb.rows[idx].cells[0].text = '委員'+str(idx)+ '\n' +opin_fir + '\n' + opin_sec
+            if o != '' and o[0] != '無':
+                opin_fir = opin_fir + str(point)+'. ' + o + '。\n'
+                point+=1
+        # 用換行以及句號 分點呈現
+        opin_sec = re.split("[\n|。]", str(shtgf.cell(row=rev+2,column=9+v*7).value)) #打字部分
+        opin_final = '委員'+str(idx)+ '\n' +opin_fir
+        for sp in opin_sec:
+            if sp != '':
+                opin_final = opin_final + str(point) + '. ' + sp + '。\n'
+                point+=1
+        tb.rows[idx].cells[0].text = opin_final.strip()
 
     lines = 7 # 根據1-5.docx的空行數等等 進行修改
     # 填寫1-5上面資訊
