@@ -43,8 +43,20 @@ for v in range(crs):
         doc.styles['Normal'].font.size = Pt(12)
         doc.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
 
-        resp = tb.rows[re+1].cells[1].text
+        # 將意見和回復 填入分數意見總表
+        opi = str(tb.rows[re+1].cells[0].text).strip('委員'+str(re+1)).strip(':').strip()
+        resp = str(tb.rows[re+1].cells[1].text).strip('委員'+str(re+1)).strip(':').strip()
 
+        # opi_f = ''
+        # res_f = ''
+        # for o in opi:
+        #     if o[0:3]!='委員'+str(re+1):
+        #         opi_f = opi_f + o
+        # for r in resp:
+        #     if r[0:3]!='委員'+str(re+1):
+        #         res_f = res_f + r
+
+        shtsc.cell(row=v+4, column=16+re).value = opi
         shtsc.cell(row=v+4, column=20+re).value = resp
         
 sc.save('final.xlsx')
