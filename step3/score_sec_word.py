@@ -25,13 +25,13 @@ lea = int(input("請選擇聯盟\n1.健康 2.環境 3.終端(若是健康聯盟�
 full = openpyxl.load_workbook('1-4.xlsx') # source 需修改檔名且放在同資料夾!!
 shtfull = full.worksheets[lea-1]
 
-# excel 1-21 from google form審查意見 上學期
-gf = openpyxl.load_workbook('1-21.xlsx')
+# excel 1-22 from google form審查意見 下學期
+gf = openpyxl.load_workbook('1-22.xlsx')
 shtgf = gf.worksheets[0]
 
 skip = 0
 for rev in range(num): 
-    doc = docx.Document('3-1.docx')
+    doc = docx.Document('3-2.docx')
 
     for v in range(crs):
         # 從課程大表取資訊
@@ -44,7 +44,7 @@ for rev in range(num):
         dpt = shtfull.cell(row=v+4,column=6).value # 取系所
         smest = shtfull.cell(row=v+4,column=10).value # 取開課學期
 
-        if smest[-1]=='2':
+        if smest[-1]=='1':
             skip+=1
             continue
 
@@ -64,7 +64,7 @@ for rev in range(num):
         tb.rows[2+v-skip].cells[3].text = crs_hos
 
         # 綜合評分
-        score = shtgf.cell(row=rev+2,column=11+(v-skip)*8).value
+        score = shtgf.cell(row=rev+2,column=9+(v-skip)*6).value
         if score>4: score=4
         score = str(score)
         tb.rows[2+v-skip].cells[4].text = score
@@ -77,7 +77,7 @@ for rev in range(num):
 
         # 審查意見
         point = 1
-        opin_fir = shtgf.cell(row=rev+2,column=9+(v-skip)*8).value #複選題選取部分
+        opin_fir = shtgf.cell(row=rev+2,column=7+(v-skip)*6).value #複選題選取部分
         if opin_fir[0]=='無': opin_fir=''
         opin_ls = opin_fir.split(', ')
         opin_fir=''
@@ -86,7 +86,7 @@ for rev in range(num):
                 opin_fir = opin_fir + str(point)+'. ' + o + '。\n'
                 point+=1
         # 用換行以及句號 分點呈現
-        opin_sec = re.split("[\n|。]", str(shtgf.cell(row=rev+2,column=10+(v-skip)*8).value)) #打字部分
+        opin_sec = re.split("[\n|。]", str(shtgf.cell(row=rev+2,column=8+(v-skip)*6).value)) #打字部分
         opin_final = opin_fir
         for sp in opin_sec:
             if sp != '':
