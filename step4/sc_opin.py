@@ -8,6 +8,7 @@ import re
 num = int(input("請輸入審查委員數:"))
 crs = int(input("請輸入課程數:"))
 lea = int(input("請選擇聯盟\n1.健康 2.環境 3.終端(若是健康聯盟請輸入1，以此類推):"))
+res = input("是否已有意見回復?(若是請輸入y，否則輸入n):")
 
 # 分數及意見總表 (此次寫入目標)
 sc = openpyxl.load_workbook('1-1.xlsx')
@@ -84,6 +85,21 @@ for rev in range(num):
                     point+=1
             shtsc.cell(row=v+4, column=15+idx).value = opin_final.strip()
             gf2_cnt+=1
+
+if res=='y':
+    for v in range(crs):
+        crs_num = shtsc.cell(row=v+4,column=2).value # 取課程編號
+        crs_nam = shtsc.cell(row=v+4,column=8).value # 取課程名稱
+        crs_hos = shtsc.cell(row=v+4,column=7).value # 取課程主持人(教師)
+        sch = shtsc.cell(row=v+4,column=3).value # 取學校
+        dpt = shtsc.cell(row=v+4,column=6).value # 取系所
+        smest = shtsc.cell(row=v+4,column=10).value # 取開課學期
+
+        doc = docx.Document(str(crs_num)+'課程-'+crs_hos+'老師'+smest+'課程審查意見回覆.docx')
+        tb = doc.tables[0]
+        for rev in range(num):
+            resp = str(tb.rows[rev+1].cells[1].text).strip('委員'+str(rev+1)).strip(':').strip()
+            shtsc.cell(row=v+4, column=20+rev).value = resp
 
 sc.save('result.xlsx')
 rs = openpyxl.load_workbook('result.xlsx')
