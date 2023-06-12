@@ -23,12 +23,6 @@ gf2 = openpyxl.load_workbook('1-22.xlsx')
 shtgf2 = gf2.worksheets[0]
 gf2_cnt=0
 
-# # 確認上下學期課程數量
-# for v in range(crs):
-#     if str(shtsc.cell(row=v+2,column=10).value)[-1]=='1':
-#         gf1_cnt+=1 # 上學期
-#     else:
-#         gf2_cnt+=1 # 下學期
 
 # 審查委員list，須根據每次審查作調整
 comite = ['洪士灝', '馬席彬', '黃世旭', '吳文慶'] 
@@ -90,53 +84,6 @@ for rev in range(num):
                     point+=1
             shtsc.cell(row=v+4, column=15+idx).value = opin_final.strip()
             gf2_cnt+=1
-
-    # # 處理上學期部分
-    # rn=0
-    # while rn < gf1_cnt:
-    #     re_nam = shtgf1.cell(row=rev+2,column=3).value[0:3] # 審查委員名稱
-    #     idx = comite.index(str(re_nam))+1 # 判斷為委員幾(ex:委員1、委員4)
-    #     if str(shtsc.cell(row=rn+2,column=10).value)[-1]=='1':
-    #         score = shtgf1.cell(row=rev+2,column=10+rn*7).value
-    #         if score > 4: score = 4
-    #         #shtsc.cell(row=rn+4, column=10+idx).value = score
-
-    #         rn+=1
-
-    # # 處理下學期部分
-    # rn=0
-    # while rn < gf2_cnt:
-    #     re_nam = shtgf2.cell(row=rev+2,column=3).value[0:3] # 審查委員名稱
-    #     idx = comite.index(str(re_nam))+1 # 判斷為委員幾(ex:委員1、委員4)
-    #     if str(shtsc.cell(row=rn+2,column=10).value)[-1]=='2':
-
-
-    #         rn+=1
-
-
-# for rev in range(num):
-#     re_nam = shtgf.cell(row=rev+2,column=3).value[0:3] # 審查委員名稱
-#     idx = comite.index(str(re_nam))+1 # 判斷為委員幾(ex:委員1、委員4)
-#     for v in range(crs):
-
-#         # 確認上下學期
-#         if str(shtsc.cell(row=gf1_cnt+2,column=10).value)[-1]=='1':
-#             gf1_cnt+=1
-
-#         # 填分數
-#         score = shtgf.cell(row=rev+2,column=10+v*7).value
-#         if score > 4: score = 4
-#         shtsc.cell(row=v+4, column=10+idx).value = score
-
-#         # 審查意見
-#         opin_fir = shtgf.cell(row=rev+2,column=8+v*7).value #複選題選取部分
-#         if opin_fir[0]=='無': opin_fir=''
-#         opin_ls = opin_fir.split(', ')
-#         opin_fir=''
-#         for o in opin_ls:
-#             opin_fir = opin_fir + o + '\n'
-#         opin_sec = str(shtgf.cell(row=rev+2,column=9+v*7).value) #打字部分
-#         shtsc.cell(row=v+4, column=15+idx).value = (opin_fir + '\n' + opin_sec).strip()
 
 sc.save('result.xlsx')
 rs = openpyxl.load_workbook('result.xlsx')
