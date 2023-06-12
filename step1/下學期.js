@@ -70,7 +70,7 @@ function SetForm2(form, yr){
           .setRequired(true);
 
       let dt_qus = form.addParagraphTextItem();
-      dt_qus.setTitle(dt[i][0]+' 審查意見補充說明 (含以上文字至少撰寫100字)')
+      dt_qus.setTitle(dt[i][0]+' 審查意見補充說明')
             .setRequired(true);
 
       let mc_ls = [4,3,2,1]
