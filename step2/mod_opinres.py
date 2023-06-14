@@ -79,4 +79,4 @@ for v in range(md):
     setFNT(rn)
 
     # 以計畫編號存檔
-    doc.save(str(mod_num)+' '+sch+' '+mod_hos+'_'+mod_nam+'_期末審查意見回覆.docx')
+    doc.save(str(mod_num)+' '+sch+' '+mod_hos+'_'+mod_nam+'_審查意見回覆.docx')
