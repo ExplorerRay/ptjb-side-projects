@@ -44,8 +44,8 @@ for v in range(crs):
         doc.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'),'標楷體')
 
         # 將意見和回復 填入分數意見總表
-        opi = str(tb.rows[re+1].cells[0].text).strip('委員'+str(re+1)).strip(':').strip()
-        resp = str(tb.rows[re+1].cells[1].text).strip('委員'+str(re+1)).strip(':').strip()
+        opi = str(tb.rows[re+1].cells[0].text).strip('委員'+str(re+1)).strip(':').strip('：').strip()
+        resp = str(tb.rows[re+1].cells[1].text).strip('委員'+str(re+1)).strip(':').strip('：').strip()
 
         # opi_f = ''
         # res_f = ''
