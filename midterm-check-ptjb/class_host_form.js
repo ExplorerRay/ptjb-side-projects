@@ -1,10 +1,15 @@
 function createNewForm2(){
-  let yr = '111'; //年度記得修改
+  var ui = SpreadsheetApp.getUi();
+  let yr = ui.prompt('請輸入年度').getResponseText();
   // 下學期
-  let new_form_2 = FormApp.create(yr + "-2 課程查核"); 
+  let new_form_2 = FormApp.create(yr + "-2 課程查核表單"); 
   let new_form_2_id = new_form_2.getId();
 
-  let destinationFolderId = "1ZD7uUQQdnLBXjLe0D7uoEtULw8fXBBdP"; //須根據情況修改
+  let destinationFolderUrl = ui.prompt('請輸入表單預計存放的雲端位置連結').getResponseText();
+  let destinationFolderId = destinationFolderUrl.split('/')[5];
+  if (destinationFolderUrl.split('/')[4] != "folders"){
+    Logger.log("請填寫雲端資料夾位置之連結")
+  }
   moveFile(new_form_2_id, destinationFolderId);
   
   SetForm2(new_form_2, yr)
@@ -16,43 +21,7 @@ function moveFile(fileId, destinationFolderId) {
 }
 
 function SetForm2(form, yr){
-  var cbValidation = FormApp.createCheckboxValidation()
-  .requireSelectAtLeast(1)
-  .build();
-
-  // 需修改description，成果報告之雲端連結
-  //   let des = yr+'-2課程成果報告：\n\
-  //   https://drive.google.com/drive/folders/1LLBxWHjNT9wq6ryua6LDEiFmeY4lxlyR\n\
-  // \n\
-  // 說明如下：\n\
-  // \n\
-  // 一、 考評重點：\n\
-  // \n\
-  //     1.課程的備課狀況\n\
-  // \n\
-  //     2.與推廣模組整合的規劃\n\
-  // \n\
-  //     3.教學設備採購情況\n\
-  // \n\
-  // \n\
-  // 二、 評等分數：優(4分)、佳(3分)、可(2分)、差(1分)';
-  //   form.setDescription(des);
   form.setCollectEmail(true);
-
-  let md_num = ['A-4', 'A-5', 'A-6', 'A-7', 'A-8', 'B-2', 'B-3', 'B-4', 'B-5', 'B-6', 'B-7', 'B-8', 'B-9', 'C-1', 'C-2', 'C-3', 'C-4', 'C-6', 'C-7', 'C-8', 'C-9', 'C-10', 'C-11', 'D-1', 'D-2', 'D-3', 'D-4', 'D-5', 'D-6', 'E-4', 'E-5', 'E-6'];
-  let md_nam = ['晶片及硬體之邏輯暨架構層次的資安防護設計', '晶片及硬體之供應鏈層次的進階資安防護設計課程', '智慧晶片系統生醫領域應用之安全性規範簡介模組教材開發', '機器學習預測IR電壓降', 'Handling Placement Constraints in Analog Layout Synthesis', '醫用智慧系統與電子感測晶片整合 \
-  設計', '智慧健康微感測系統', '低功耗線性及切換式穩壓器設計', '能源擷取電路設計', '智慧感測晶片之類比數位轉換電路', '健康促進應用開發專題', '基因資訊探勘與序列比對晶片設計', '硬體計算在生物 \
-  資訊學上的應用', '數位系統的高階合成設計方法', 'AI加速器設計概論與實務', '智慧影像處理AI加速器 \
-  設計', '智慧終端裝置影像處理晶片設計', '智慧型自走載具系統與晶片設計模組', '人體活動辨識和非接 \
-  觸式體溫量測模組', '近記憶體運算及記憶體內運算電路設計', '語音辨識系統', '加速TinyML模型於微控 \
-  制器之方法設計與實作', '軟硬體協同設計之人工智慧晶片設計', '微型環境感測介面電路設計與應用', ' \
-  環境能量擷取電路晶片設計', '功率管理模組', '空品與水質感測晶片技術', '低功耗無線感控節點', '應 \
-  用於土壤成分監測之感測介面電路設計', '多元自駕車空間感知技術與實作', '模式預測控制技術於自動駕 \
-  駛系統之應用', '室外定位融合系統模擬與實作'];
-  let md=[];
-  for (let l=0; l<md_nam.length; l++) {
-    md.push(md_num[l].concat(' ', md_nam[l]));
-  }
 
   let sht = SpreadsheetApp.getActiveSheet();
   let startRow = 4;
@@ -93,16 +62,16 @@ function SetForm2(form, yr){
 
   // 第三點
   form.addPageBreakItem().setTitle('3. 課程與模組結合使用情形')
-  form.addCheckboxItem().setTitle('課程之採用模組')
-                        .setChoiceValues(md)
-                        .setRequired(true);
-  form.addTextItem().setTitle('採用模組時數\n例如: A-1 (12小時)、C-2 (9小時)').setRequired(true);
+  // form.addCheckboxItem().setTitle('課程之採用模組')
+  //                       .setChoiceValues(md)
+  //                       .setRequired(true);
+  // form.addTextItem().setTitle('採用模組時數\n例如: A-1 (12小時)、C-2 (9小時)').setRequired(true);
+  form.addTextItem().setTitle('請列出課程大綱並註明重點模組採用總時數，並將檔案連結貼於此').setRequired(true);
   //var img = UrlFetchApp.fetch('https://drive.google.com/file/d/1Ea3Y3aQ8yF8k8f3oPFq0345HLlAegr39/view?usp=drive_link')
   //form.addImageItem().setTitle('範例').setImage(img);
 
   // 第四點
   form.addPageBreakItem().setTitle('4. 課程開授成效');
-
   form.addSectionHeaderItem().setTitle('申請書內目標值');
   form.addTextItem().setTitle('修課人次\nEX: 大學部(5人)、碩士班(20人)、博士班(0人)')
                     .setRequired(true);
@@ -114,6 +83,8 @@ function SetForm2(form, yr){
                     .setRequired(true);
   form.addTextItem().setTitle('專題作品數').setRequired(true);
   form.addParagraphTextItem().setTitle('質化成效說明').setRequired(true);
+  form.addParagraphTextItem().setTitle('未達目標值，須在此說明理由')
+                             .setHelpText("例如: 跟必修課程時間重疊...");
 
   // 第五點
   form.addPageBreakItem().setTitle('5. 參與聯盟活動、競賽情形');
